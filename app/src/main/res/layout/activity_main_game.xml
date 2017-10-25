@@ -12,8 +12,7 @@
         android:id="@+id/animation"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
 
         <ImageView
@@ -22,7 +21,17 @@
             android:layout_height="100dp"
             app:srcCompat="@drawable/brawl" />
 
+        <ImageView
+            android:id="@+id/obstical"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="right"
+            android:visibility="gone"
+            app:srcCompat="@drawable/pylon" />
+
+
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/buttons"
         android:layout_width="match_parent"
