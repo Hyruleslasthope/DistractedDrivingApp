@@ -1,8 +1,14 @@
 package com.example.hyruleslasthope.distracteddrivingapp;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,109 +29,182 @@ public class MainGame extends AppCompatActivity {
         setContentView(R.layout.activity_main_game);
 
 
-        final ImageView myImageView = (ImageView) findViewById(R.id.imageView);
+
+
+        final ImageView mainCar = (ImageView) findViewById(R.id.imageView);
         Button upButton = (Button) findViewById(R.id.upBtn);
-        Button downButton= (Button) findViewById(R.id.dwnBtn);
+        Button downButton = (Button) findViewById(R.id.dwnBtn);
 
         final ImageView pylon = (ImageView) findViewById(R.id.obstical);
+        pylon.setVisibility(View.VISIBLE);
 
-        pylon.setVisibility(View.GONE);
+        final ObjectAnimator botanimX = ObjectAnimator.ofFloat(pylon, "translationX", 1500, -1500);
+        final ObjectAnimator botanimY = ObjectAnimator.ofFloat(pylon, "translationY", 110, 110);
+        final AnimatorSet botanim = new AnimatorSet();
+        botanim.setDuration(4000);
+        botanim.playTogether(botanimX, botanimY);
 
-        final Animation obUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.obsticalmove_uppos);
+        final ObjectAnimator topanimX = ObjectAnimator.ofFloat(pylon, "translationX", 1500, -1500);
+        final ObjectAnimator topanimY = ObjectAnimator.ofFloat(pylon, "translationY", -320, -320);
+        final AnimatorSet topanim = new AnimatorSet();
+        topanim.setDuration(4000);
+        topanim.playTogether(topanimX, topanimY);
 
-        final Animation obDwn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.obsticalmove_dwnpos);
+        final ObjectAnimator carMoveDwn = ObjectAnimator.ofFloat(mainCar,"translationY",0,430);
+        carMoveDwn.setDuration(0);
 
-        pylon.setX(1500);
-        obUp.setFillAfter(true);
-        obDwn.setFillAfter(true);
-        pylon.startAnimation(obDwn);
-
-        final Animation moveDown = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.carmove_down);
+        final ObjectAnimator carMoveUp = ObjectAnimator.ofFloat(mainCar,"translationY",430,0);
+        carMoveUp.setDuration(0);
 
 
-        obUp.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                pylon.setX(1500);
-                pylon.setVisibility(View.VISIBLE);
-            }
+        final Toast toast = Toast.makeText(getApplicationContext(), "Hit", Toast.LENGTH_SHORT);
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                if(RanNum() % 2 == 0) {
-                    pylon.startAnimation(obDwn);
-                }else{
-                    pylon.startAnimation(obUp);
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        obDwn.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                pylon.setX(1500);
-                pylon.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                if(RanNum() % 2 == 1) {
-                    pylon.startAnimation(obUp);
-                }else{
-                    pylon.startAnimation(obDwn);
-                }
-                }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        final Animation moveUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.carmove_up);
 
         downButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              //  ((ViewGroup.MarginLayoutParams)myImageView.getLayoutParams()).topMargin = 300;
-                //myImageView.requestLayout();
-                myImageView.startAnimation(moveDown);
+                carMoveDwn.start();
+
             }
         });
 
         upButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-             //   ((ViewGroup.MarginLayoutParams)myImageView.getLayoutParams()).topMargin = 0;
-               // myImageView.requestLayout();
-                myImageView.startAnimation(moveUp);
+                carMoveUp.start();
+    }
+});
+
+        botanim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+
+                    topanim.start();
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
             }
         });
 
-        Toast toast = Toast.makeText(getApplicationContext(), "Hit", Toast.LENGTH_SHORT);
+        botanimX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
 
-        Rect r1 = new Rect();
-        Rect r2 = new Rect();
+                int x1=(int)pylon.getX();
+                int y1=(int)pylon.getY();
+                int width1=pylon.getWidth();
+                int height1=pylon.getHeight();
+                int x2=(int)mainCar.getX();
+                int y2=(int)mainCar.getY();
+                int width2=mainCar.getWidth();
+                int height2=mainCar.getHeight();
+                int right1 = x1 + width1 / 2;
+                int right2 = x2 + width2 / 2;
+                int bottom1 = y1 + height1 / 2;
+                int bottom2 = y2 + height2 /2 ;
 
-        myImageView.getHitRect(r1);
-        pylon.getHitRect(r2);
+                if (y1 == y2)
+                {
+                   toast.setText("" + y1 + " " + y2);
+                   toast.show();
+                }
 
-        if(Rect.intersects(r2,r1)){
-            toast.show();
-        }
+
+
+                if (right1 == right2 )
+                {
+
+
+
+                }
+
+            }
+        });
+
+
+        topanim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+
+                    botanim.start();
+
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        topanimX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int x1=(int)pylon.getX();
+                int y1=(int)pylon.getY();
+                int width1=pylon.getWidth();
+                int height1=pylon.getHeight();
+                int x2=(int)mainCar.getX();
+                int y2=(int)mainCar.getY();
+                int width2=mainCar.getWidth();
+                int height2=mainCar.getHeight();
+                int right1 = x1 + width1 / 2;
+                int right2 = x2 + width2 / 2;
+                int bottom1 = y1 + height1 / 2;
+                int bottom2 = y2 + height2 / 2;
+                if (x2 >= x1 && x2 <= right1 && y2 >= y2 && y2 <= bottom1)
+                {
+                   //toast.setText("top hit");
+                    //toast.show();
+                }
+
+                if (
+                        right2 >= x1 && right2 <= right1 && bottom2 >= y2 && bottom2 <= bottom1)
+                {
+                   // toast.setText("top hit");
+                 //  toast.show();
+                }
+            }
+        });
+        botanim.start();
+
+
+
+
+
+
+
+
     }
-
-    private int RanNum(){
+    private int RanNum() {
         Random ran = new Random();
-        int r = ran.nextInt(11-1)+ 1;
+        int r = ran.nextInt(11 - 1) + 1;
         return r;
     }
 
-}
+    }
+

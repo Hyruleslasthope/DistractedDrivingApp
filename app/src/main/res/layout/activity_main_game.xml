@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.hyruleslasthope.distracteddrivingapp.MainGame">
+    tools:context="com.example.hyruleslasthope.distracteddrivingapp.MainGame"
+    android:baselineAligned="false">
 
 
     <LinearLayout
@@ -18,14 +19,16 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
+            android:scaleType="fitXY"
             app:srcCompat="@drawable/brawl" />
 
         <ImageView
             android:id="@+id/obstical"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="80dp"
             android:layout_gravity="right"
+            android:scaleType="fitXY"
             android:visibility="gone"
             app:srcCompat="@drawable/pylon" />
 
