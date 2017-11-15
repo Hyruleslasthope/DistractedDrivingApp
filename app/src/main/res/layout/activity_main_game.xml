@@ -35,27 +35,12 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/buttons"
+    <FrameLayout
+        android:id="@+id/fragContainer"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:orientation="vertical">
+        android:layout_height="300dp">
+    </FrameLayout>
 
-        <Button
-            android:id="@+id/upBtn"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:text="↑"
-            android:visibility="visible"
-            tools:layout_editor_absoluteY="338dp" />
 
-        <Button
-            android:id="@+id/dwnBtn"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:text="↓"
-            android:visibility="visible"
-            tools:layout_editor_absoluteY="488dp" />
-    </LinearLayout>
 
 </LinearLayout>

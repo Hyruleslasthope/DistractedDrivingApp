@@ -5,7 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.FragmentManager;
 import android.graphics.Rect;
+import android.os.CountDownTimer;
+import android.support.v4.app.FragmentActivity;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import java.util.Random;
@@ -23,17 +28,34 @@ import javax.xml.datatype.Duration;
 
 public class MainGame extends AppCompatActivity {
 
+    FragmentManager fm;
+    FragmentTransaction ft;
+    quizFrag qfrag = new quizFrag();
+    carControlsFrag cfrag = new carControlsFrag();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
 
+        View v = findViewById(R.id.fragContainer);
 
+        fm = getFragmentManager();
+        ft = fm.beginTransaction();
+
+//        ft.add(R.id.fragContainer,qfrag);
+//        ft.hide(qfrag);
+
+        ft.add(R.id.fragContainer,cfrag);
+
+        ft.commit();
+
+        //swap();
 
 
         final ImageView mainCar = (ImageView) findViewById(R.id.imageView);
-        Button upButton = (Button) findViewById(R.id.upBtn);
-        Button downButton = (Button) findViewById(R.id.dwnBtn);
+
 
         final ImageView pylon = (ImageView) findViewById(R.id.obstical);
         pylon.setVisibility(View.VISIBLE);
@@ -50,30 +72,14 @@ public class MainGame extends AppCompatActivity {
         topanim.setDuration(4000);
         topanim.playTogether(topanimX, topanimY);
 
-        final ObjectAnimator carMoveDwn = ObjectAnimator.ofFloat(mainCar,"translationY",0,430);
-        carMoveDwn.setDuration(0);
 
-        final ObjectAnimator carMoveUp = ObjectAnimator.ofFloat(mainCar,"translationY",430,0);
-        carMoveUp.setDuration(0);
 
 
         final Toast toast = Toast.makeText(getApplicationContext(), "Hit", Toast.LENGTH_SHORT);
 
 
-        downButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                carMoveDwn.start();
 
-            }
-        });
 
-        upButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                carMoveUp.start();
-    }
-});
 
         botanim.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -149,6 +155,8 @@ public class MainGame extends AppCompatActivity {
                     botanim.start();
 
 
+
+
             }
 
             @Override
@@ -199,12 +207,31 @@ public class MainGame extends AppCompatActivity {
 
 
 
-    }
-    private int RanNum() {
-        Random ran = new Random();
-        int r = ran.nextInt(11 - 1) + 1;
-        return r;
+
     }
 
+
+    public void timer (){
+        new CountDownTimer(10000,1000){
+            public void onTick(long millisUntilFinished){
+
+            }
+            public void onFinish(){
+                swap();
+            }
+        }.start();
+    }
+    public void swap(){
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if(cfrag.isAdded()){
+            ft.remove(cfrag);
+            ft.add(R.id.fragContainer,qfrag);
+        }else{
+            ft.remove(qfrag);
+            ft.add(R.id.fragContainer,cfrag);
+        }
+        ft.commit();
+    }
     }
 

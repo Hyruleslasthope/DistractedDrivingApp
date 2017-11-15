@@ -8,7 +8,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button startBtn, gameBtn;
+    Button startBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
 
         startBtn = (Button) findViewById(R.id.startBtn);
 
-        gameBtn = (Button) findViewById(R.id.mathBtn);
 
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,12 +27,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        gameBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(),mathGame.class);
-                startActivity(intent);
-            }
-        });
     }
 }
