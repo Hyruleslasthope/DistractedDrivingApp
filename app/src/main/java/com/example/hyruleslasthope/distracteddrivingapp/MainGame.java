@@ -42,6 +42,7 @@ public class MainGame extends AppCompatActivity {
         View v = findViewById(R.id.fragContainer);
 
         fm = getFragmentManager();
+
         ft = fm.beginTransaction();
 
 //        ft.add(R.id.fragContainer,qfrag);

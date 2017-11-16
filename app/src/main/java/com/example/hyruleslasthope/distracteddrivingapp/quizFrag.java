@@ -57,7 +57,7 @@ public class quizFrag extends android.app.Fragment {
         scan.close();
 
         for(int i = 0; i < input.size(); i++){
-            questions[i]= input.get(i).split("#|,");
+            questions[i]= input.get(i).split(",");
 
         }
 
@@ -68,11 +68,11 @@ public class quizFrag extends android.app.Fragment {
         if(questionNum < questions.length) {
             qText.setText(questions[questionNum][0]);
 
-            final int answerlocation = questions[questionNum].length - 1;
-
+            final int answerlocation = questions[questionNum].length-1;
+            final String ans = questions[questionNum][answerlocation];
             b1.setText(questions[questionNum][1]);
             b2.setText(questions[questionNum][2]);
-            if(questions[questionNum][1].equals("True")){
+            if(questions[questionNum][1].equals("true")){
 
             }else {
                 b3.setText(questions[questionNum][3]);
@@ -83,7 +83,7 @@ public class quizFrag extends android.app.Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    if(b1.getText() == questions[questionNum][answerlocation]){
+                    if(b1.getText() == ans){
 
                         toast.show();
                         ((MainGame) getActivity()).swap();
@@ -97,7 +97,7 @@ public class quizFrag extends android.app.Fragment {
             b2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(b2.getText().equals(questions[questionNum][answerlocation])){
+                    if(b2.getText() == ans){
                         correct = true;
                         toast.show();
 
@@ -111,7 +111,7 @@ public class quizFrag extends android.app.Fragment {
             b3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(b3.getText().equals(questions[questionNum][answerlocation])){
+                    if(b3.getText() == ans){
                         correct = true;
                         toast.show();
 
