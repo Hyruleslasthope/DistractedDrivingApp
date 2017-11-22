@@ -5,11 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Application;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 import android.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,14 +48,13 @@ public class MainGame extends AppCompatActivity {
 
         ft = fm.beginTransaction();
 
-//        ft.add(R.id.fragContainer,qfrag);
-//        ft.hide(qfrag);
 
         ft.add(R.id.fragContainer,cfrag);
 
         ft.commit();
 
-        //swap();
+      final android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(MainGame.this).setMessage("Crashed").create();
+
 
 
         final ImageView mainCar = (ImageView) findViewById(R.id.imageView);
@@ -110,33 +112,31 @@ public class MainGame extends AppCompatActivity {
         botanimX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+                ImageView a = pylon;
+                ImageView b = mainCar;
+                Boolean collision = false;
+                float bl = a.getY();
+                float bt = a.getX();
+                float br = a.getWidth() + bl;
+                float bb = a.getHeight() + bt;
+                float pl = b.getY();
+                float pt = b.getX();
+                float pr = b.getWidth() + pl;
+                float pb = b.getHeight() + pt;
+                if (bl <= pr && bl >= pl && bt >= pt && bt <= pb) {
+                    collision = true;
 
-                int x1=(int)pylon.getX();
-                int y1=(int)pylon.getY();
-                int width1=pylon.getWidth();
-                int height1=pylon.getHeight();
-                int x2=(int)mainCar.getX();
-                int y2=(int)mainCar.getY();
-                int width2=mainCar.getWidth();
-                int height2=mainCar.getHeight();
-                int right1 = x1 + width1 / 2;
-                int right2 = x2 + width2 / 2;
-                int bottom1 = y1 + height1 / 2;
-                int bottom2 = y2 + height2 /2 ;
-
-                if (y1 == y2)
-                {
-                   toast.setText("" + y1 + " " + y2);
-                   toast.show();
+                } else if (br >= pl && br <= pr && bb >= pt && bb <= pb) {
+                    collision = true;
+                } else if (bt <= pb && bt >= pt && br >= pl && br <= pr) {
+                    collision =true;
+                } else if (bb >= pt && bb <= pb && bl >= pl && bl <= pr) {
+                    collision =true;
                 }
 
 
-
-                if (right1 == right2 )
-                {
-
-
-
+                if(collision){
+                    dialog.show();
                 }
 
             }
@@ -173,29 +173,31 @@ public class MainGame extends AppCompatActivity {
         topanimX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int x1=(int)pylon.getX();
-                int y1=(int)pylon.getY();
-                int width1=pylon.getWidth();
-                int height1=pylon.getHeight();
-                int x2=(int)mainCar.getX();
-                int y2=(int)mainCar.getY();
-                int width2=mainCar.getWidth();
-                int height2=mainCar.getHeight();
-                int right1 = x1 + width1 / 2;
-                int right2 = x2 + width2 / 2;
-                int bottom1 = y1 + height1 / 2;
-                int bottom2 = y2 + height2 / 2;
-                if (x2 >= x1 && x2 <= right1 && y2 >= y2 && y2 <= bottom1)
-                {
-                   //toast.setText("top hit");
-                    //toast.show();
+                ImageView a = pylon;
+                ImageView b = mainCar;
+                Boolean collision = false;
+                float bl = a.getY();
+                float bt = a.getX();
+                float br = a.getWidth() + bl;
+                float bb = a.getHeight() + bt;
+                float pl = b.getY();
+                float pt = b.getX();
+                float pr = b.getWidth() + pl;
+                float pb = b.getHeight() + pt;
+                if (bl <= pr && bl >= pl && bt >= pt && bt <= pb) {
+                    collision = true;
+
+                } else if (br >= pl && br <= pr && bb >= pt && bb <= pb) {
+                    collision = true;
+                } else if (bt <= pb && bt >= pt && br >= pl && br <= pr) {
+                    collision =true;
+                } else if (bb >= pt && bb <= pb && bl >= pl && bl <= pr) {
+                    collision =true;
                 }
 
-                if (
-                        right2 >= x1 && right2 <= right1 && bottom2 >= y2 && bottom2 <= bottom1)
-                {
-                   // toast.setText("top hit");
-                 //  toast.show();
+
+                if(collision){
+                    dialog.show();
                 }
             }
         });
