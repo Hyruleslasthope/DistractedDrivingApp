@@ -33,6 +33,7 @@ public class quizFrag extends android.app.Fragment {
     Button b1,b2,b3;
     Boolean correct;
     int questionNum;
+    String ans;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class quizFrag extends android.app.Fragment {
 
         correct  = true;
 
+        //create buttons and questions
         qText = (TextView) v.findViewById(R.id.qText);
         b1 = (Button) v.findViewById(R.id.option1);
         b2 = (Button) v.findViewById(R.id.option2);
@@ -49,7 +51,7 @@ public class quizFrag extends android.app.Fragment {
 
 
 
-
+        //hard coded questions :(
         questions = new String[25][5];
         questions[0][0]= "True or False: one person is injured in a distracted-driving collision every hour";
         questions[0][1]= "True";
@@ -125,57 +127,22 @@ public class quizFrag extends android.app.Fragment {
         questions[11][4] = "$2000";
 
 
+            //create the question and answers
+            ans = setQuestions(b1,b2,b3,questions);
 
 
-
-//
-//        Scanner scan = new Scanner(getResources().openRawResource(R.raw.quizinput));
-//        input = new ArrayList<String>();
-//
-//        while(scan.hasNextLine()){
-//            input.add(scan.nextLine());
-//        }
-//        scan.close();
-//
-//        for(int i = 0; i < input.size(); i++){
-//            questions[i]= input.get(i).split(",");
-//
-//        }
-
-       final Toast toast = Toast.makeText(v.getContext(), "Hit", Toast.LENGTH_SHORT);
-
-        Random ran = new Random();
-
-        int r = ran.nextInt(11 - 1) + 1;
-        questionNum = r;
-
-        if(questionNum < questions.length) {
-            qText.setText(questions[questionNum][0]);
-
-            final int answerlocation = questions[questionNum].length-1;
-            final String ans = questions[questionNum][answerlocation];
-
-            b1.setText(questions[questionNum][1]);
-            b2.setText(questions[questionNum][2]);
-
-            if(questions[questionNum][1].equals("True")){
-
-            }else {
-                b3.setText(questions[questionNum][3]);
-            }
-
-
+            //listeners to see if the right option was selected
             b1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
                     if(b1.getText() == ans){
 
-                        toast.show();
+
                         ((MainGame) getActivity()).swap();
 
                     }else{
-                        b1.setEnabled(false);
+                        setQuestions(b1,b2,b3,questions);
 
                     }
                 }
@@ -185,11 +152,11 @@ public class quizFrag extends android.app.Fragment {
                 public void onClick(View v) {
                     if(b2.getText() == ans){
                         correct = true;
-                        toast.show();
+
 
                         ((MainGame) getActivity()).swap();
                     }else{
-                        b2.setEnabled(false);
+                        setQuestions(b1,b2,b3,questions);
                     }
 
                 }
@@ -199,16 +166,16 @@ public class quizFrag extends android.app.Fragment {
                 public void onClick(View v) {
                     if(b3.getText() == ans){
                         correct = true;
-                        toast.show();
+
 
                         ((MainGame) getActivity()).swap();
                     }else{
-                        b3.setEnabled(false);
+                        setQuestions(b1,b2,b3,questions);
                     }
 
                 }
             });
-        }
+
 
 
 
@@ -223,5 +190,29 @@ public class quizFrag extends android.app.Fragment {
     public void onPause() {
         super.onPause();
 
+    }
+    //create a random number and find that element in the questiuon array, make the buttons the possible answers and set the text to the appropriate question
+    private String setQuestions(Button b1, Button b2,Button b3, String[][] questions ){
+
+        Random ran = new Random();
+
+        int r = ran.nextInt(11 - 1) + 1;
+        questionNum = r;
+
+        qText.setText(questions[questionNum][0]);
+        final int answerlocation = questions[questionNum].length-1;
+        ans = questions[questionNum][answerlocation];
+
+        b1.setText(questions[questionNum][1]);
+        b2.setText(questions[questionNum][2]);
+
+        if(questions[questionNum][1].equals("True")){
+            b3.setEnabled(false);
+        }else {
+            b3.setEnabled(true);
+            b3.setText(questions[questionNum][3]);
+        }
+
+        return ans;
     }
 }

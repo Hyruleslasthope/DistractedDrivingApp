@@ -5,63 +5,73 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.app.Application;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.graphics.Rect;
 import android.os.CountDownTimer;
-import android.support.v4.app.FragmentActivity;
 import android.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
-
 import java.util.Random;
-
-import javax.xml.datatype.Duration;
 
 public class MainGame extends AppCompatActivity {
 
+    //create the two fragments for swapping
     FragmentManager fm;
     FragmentTransaction ft;
     quizFrag qfrag = new quizFrag();
     carControlsFrag cfrag = new carControlsFrag();
+    static boolean isRunning = false;
 
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        isRunning = true;
+    }
+    @Override
+    public void onStop(){
+        super.onStop();
+        isRunning = false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game);
 
-        View v = findViewById(R.id.fragContainer);
-
-        fm = getFragmentManager();
-
-        ft = fm.beginTransaction();
-
-
-        ft.add(R.id.fragContainer,cfrag);
-
-        ft.commit();
-
-      final android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(MainGame.this).setMessage("Crashed").create();
-
-
-
+        //find imageviews and set up fragments
         final ImageView mainCar = (ImageView) findViewById(R.id.imageView);
-
-
         final ImageView pylon = (ImageView) findViewById(R.id.obstical);
         pylon.setVisibility(View.VISIBLE);
+
+        fm = getFragmentManager();
+        ft = fm.beginTransaction();
+        ft.add(R.id.fragContainer,cfrag);
+        ft.commit();
+
+        final String[] stats = new String[]{"Nearly 3 out of 4 drivers in Canada have admitted to driving distracted",
+                "You are 23 times more likely to crash if you text while drive",
+                "If you take your eyes off the road for more than 2 seconds, your crash risk doubles",
+                "The OPP recently reported that distracted driving is the #1 killer on our roads",
+                "Deaths have doubled from collisions caused by distracted driving since 2000",
+                "Every 30mins one person is injured from distracted driving",
+                "94% of t  eenagers understand the consequences of DD, but 35% of them admitted they do it anyway"};
+
+      final android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(MainGame.this).create();
+        dialog.setButton(Dialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+
+
+
+
 
         final ObjectAnimator botanimX = ObjectAnimator.ofFloat(pylon, "translationX", 1500, -1500);
         final ObjectAnimator botanimY = ObjectAnimator.ofFloat(pylon, "translationY", 110, 110);
@@ -76,14 +86,10 @@ public class MainGame extends AppCompatActivity {
         topanim.playTogether(topanimX, topanimY);
 
 
+       pylonSpawn(botanim,topanim);
 
 
-        final Toast toast = Toast.makeText(getApplicationContext(), "Hit", Toast.LENGTH_SHORT);
-
-
-
-
-
+        //animation listeners to start another animation when one ends
         botanim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -94,8 +100,7 @@ public class MainGame extends AppCompatActivity {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 
-                    topanim.start();
-
+                topanim.start();
             }
 
             @Override
@@ -109,6 +114,7 @@ public class MainGame extends AppCompatActivity {
             }
         });
 
+        //checks every frame of the animation to see if there is a collision
         botanimX.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -135,7 +141,8 @@ public class MainGame extends AppCompatActivity {
                 }
 
 
-                if(collision){
+                if(collision&& !isFinishing()){
+                    dialog.setMessage("You Have Crashed, " + stats[random()]);
                     dialog.show();
                 }
 
@@ -153,10 +160,7 @@ public class MainGame extends AppCompatActivity {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 
-                    botanim.start();
-
-
-
+                botanim.start();
 
             }
 
@@ -196,24 +200,17 @@ public class MainGame extends AppCompatActivity {
                 }
 
 
-                if(collision){
+                if(collision && !isFinishing()){
+                    dialog.setMessage("You Have Crashed, " + stats[random()]);
                     dialog.show();
                 }
             }
         });
-        botanim.start();
-
-
-
-
-
-
-
 
 
     }
 
-
+    //Switch to the quiz every 10 seconds
     public void timer (){
         new CountDownTimer(10000,1000){
             public void onTick(long millisUntilFinished){
@@ -224,7 +221,9 @@ public class MainGame extends AppCompatActivity {
             }
         }.start();
     }
+    //swap the existing fragment with the other
     public void swap(){
+
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         if(cfrag.isAdded()){
@@ -234,7 +233,28 @@ public class MainGame extends AppCompatActivity {
             ft.remove(qfrag);
             ft.add(R.id.fragContainer,cfrag);
         }
-        ft.commit();
+            if(isRunning && !isFinishing()) {
+                ft.commit();
+            }
+    }
+
+    //randomly spawn a pylon(does not work constantly)
+    public void pylonSpawn(AnimatorSet a, AnimatorSet b){
+        Random random = new Random();
+        int r = random.nextInt(10-1 + 1)+1;
+
+        if(r%2 == 0){
+            a.start();
+        }else{
+            b.start();
+        }
+
+    }
+    public int random(){
+        Random random = new Random();
+        int r = random.nextInt(6-1 + 1)+1;
+
+        return r;
     }
     }
 
