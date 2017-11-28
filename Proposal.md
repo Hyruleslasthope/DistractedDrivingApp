@@ -1,0 +1,8 @@
+Distracted Driving: The phone game about staying off your phone 
+
+
+
+With everyone having phones it is easy to forget when and where it is appropriate to use them.  Some are just rude such as using your phone while talking to someone or at a nice restaurant. Driving while using a phone is just outride dangerous, to the driver and to others.  I chose to create a game to bring awareness to distracted driving because it has been a small but still a part of my life. Several years ago, my neighbor had lost a friend to texting while driving.  It is a completely preventable accident that just needs more awareness to the dangers of not focusing on driving, while driving.  
+Distracted driving deaths have doubled since 2000 (https://www.thinkinsure.ca/insurance-help-centre/distracted-driving-in-ontario.html). I feel if an easy and entertaining way to bring the dangers of distracted driving to light where available people would be less inclined to continue to text and drive. Distracted driving is not limited to only texting, eating, drinking, smoking and applying makeup also are considered distracted driving.   
+With the game, I hope to market it to teenagers and young adults who are driving. Going through MTO for funding to fully flush out the app. I hope the app would be easily accessible to everyone for free. The goal of the game is to spread awareness and not charging for it enables the easiest access. 
+All the data in the game is from the official distracted driving Ontario website, https://www.ontario.ca/page/distracted-driving. The app currently would only be correct in Ontario but localization would be a great addition adding French as well. Expanding the app to IOS devices and possibly online would be in the future as well.   
